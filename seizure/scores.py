@@ -11,6 +11,6 @@ def get_score_summary(name, scores):
 def print_results(summaries):
     summaries.sort(cmp=lambda x,y: cmp(x[1], y[1]))
     if len(summaries) > 1:
-        print 'summaries'
+        print('summaries')
         for s, mean in summaries:
-            print s
+            print(s)

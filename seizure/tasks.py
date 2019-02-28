@@ -167,7 +167,7 @@ def parse_input_data(data_dir, target, data_type, pipeline, gen_ictal=False):
     # generate (X, <y>, <latency>) per channel
     def process_raw_data(mat_data, with_latency):
         start = time.get_seconds()
-        print 'Loading data',
+        print('Loading data')
         X = []
         y = []
         latencies = []
@@ -211,20 +211,20 @@ def parse_input_data(data_dir, target, data_type, pipeline, gen_ictal=False):
             X.append(transformed_data)
             prev_data = data
 
-        print '(%ds)' % (time.get_seconds() - start)
+        print('(%ds)' % (time.get_seconds() - start))
 
         X = np.array(X)
         y = np.array(y)
         latencies = np.array(latencies)
 
         if ictal:
-            print 'X', X.shape, 'y', y.shape, 'latencies', latencies.shape
+            print('X', X.shape, 'y', y.shape, 'latencies', latencies.shape)
             return X, y, latencies
         elif interictal:
-            print 'X', X.shape, 'y', y.shape
+            print('X', X.shape, 'y', y.shape)
             return X, y
         else:
-            print 'X', X.shape
+            print('X', X.shape)
             return X
 
     data = process_raw_data(mat_data, with_latency=ictal)
@@ -259,7 +259,7 @@ def flatten(data):
 
 # split up ictal and interictal data into training set and cross-validation set
 def prepare_training_data(ictal_data, interictal_data, cv_ratio):
-    print 'Preparing training data ...',
+    print('Preparing training data ...')
     ictal_X, ictal_y = flatten(ictal_data.X), ictal_data.y
     interictal_X, interictal_y = flatten(interictal_data.X), interictal_data.y
 
@@ -279,13 +279,13 @@ def prepare_training_data(ictal_data, interictal_data, cv_ratio):
 
     start = time.get_seconds()
     elapsedSecs = time.get_seconds() - start
-    print "%ds" % int(elapsedSecs)
+    print("%ds" % int(elapsedSecs))
 
-    print 'X_train:', np.shape(X_train)
-    print 'y_train:', np.shape(y_train)
-    print 'X_cv:', np.shape(X_cv)
-    print 'y_cv:', np.shape(y_cv)
-    print 'y_classes:', y_classes
+    print('X_train:', np.shape(X_train))
+    print('y_train:', np.shape(y_train))
+    print('X_cv:', np.shape(X_cv))
+    print('y_cv:', np.shape(y_cv))
+    print('y_classes:', y_classes)
 
     return {
         'X_train': X_train,
@@ -355,30 +355,30 @@ def split_train_ictal(X, y, latencies, cv_ratio):
 
 # train classifier for cross-validation
 def train(classifier, X_train, y_train, X_cv, y_cv, y_classes):
-    print "Training ..."
+    print("Training ...")
 
-    print 'Dim', 'X', np.shape(X_train), 'y', np.shape(y_train), 'X_cv', np.shape(X_cv), 'y_cv', np.shape(y_cv)
+    print('Dim', 'X', np.shape(X_train), 'y', np.shape(y_train), 'X_cv', np.shape(X_cv), 'y_cv', np.shape(y_cv))
     start = time.get_seconds()
     classifier.fit(X_train, y_train)
-    print "Scoring..."
+    print("Scoring...")
     S, E = score_classifier_auc(classifier, X_cv, y_cv, y_classes)
     score = 0.5 * (S + E)
 
     elapsedSecs = time.get_seconds() - start
-    print "t=%ds score=%f" % (int(elapsedSecs), score)
+    print("t=%ds score=%f" % (int(elapsedSecs), score))
     return score, S, E
 
 
 # train classifier for predictions
 def train_all_data(classifier, X_train, y_train, X_cv, y_cv):
-    print "Training ..."
+    print("Training ...")
     X = np.concatenate((X_train, X_cv), axis=0)
     y = np.concatenate((y_train, y_cv), axis=0)
-    print 'Dim', np.shape(X), np.shape(y)
+    print('Dim', np.shape(X), np.shape(y))
     start = time.get_seconds()
     classifier.fit(X, y)
     elapsedSecs = time.get_seconds() - start
-    print "t=%ds" % int(elapsedSecs)
+    print("t=%ds" % int(elapsedSecs))
 
 
 # sub mean divide by standard deviation
